@@ -2,57 +2,92 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <title>撑满画布版 Logo 生成</title>
     <style>
-        :root {
-            /* 蓝紫渐变背景色 */
-            --bg-gradient: linear-gradient(135deg, #3037eb, #8247e5); 
-            /* 红色圆圈颜色 */
-            --circle-bg: #e62117; 
-            /* 十字星颜色 */
-            --star-color: #a0f9ff;
-        }
-
         body {
-            background: var(--bg-gradient);
+            background: #222;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden;
         }
-
-        /* 红色圆圈容器 */
-        .circle {
-            position: relative;
-            width: 150px; /* 您可以根据需要调整圆圈大小 */
-            height: 150px;
-            background-color: var(--circle-bg);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* 添加微弱投影增强立体感 */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        canvas {
+            background: transparent;
+            /* 预览给个细边框方便看，下载后不会带边框 */
+            outline: 1px solid #444; 
         }
-
-        /* 中间的十字星 */
-        .star {
-            width: 30px; /* 调整星星大小 */
-            height: 30px;
-            background-color: var(--star-color);
-            /* 使用 clip-path 绘制四角星 */
-            clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
-            /* 星星的发光效果 */
-            filter: drop-shadow(0 0 8px #42e8f1);
+        .controls {
+            margin-top: 20px;
+            color: white;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <div class="circle">
-        <div class="star"></div>
+    <canvas id="logoCanvas" width="200" height="200"></canvas>
+    
+    <div class="controls">
+        <p>这张图去掉了所有边距，能让网页里的图标显示最大化</p>
+        <button onclick="downloadPNG()">下载“撑满”版 PNG</button>
     </div>
 
+    <script>
+        const canvas = document.getElementById('logoCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawLogo() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const centerX = 100;
+            const centerY = 100;
+
+            // 1. 绘制红色圆圈
+            // 关键：半径设为 100，完全贴住 200x200 画布的边缘
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 100, 0, Math.PI * 2);
+            ctx.fillStyle = '#e62117';
+            ctx.fill();
+
+            // 2. 绘制中间的星星
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = "#42e8f1";
+            ctx.fillStyle = '#a0f9ff';
+            
+            // 为了协调，星星也相应调大
+            const outerRadius = 70; 
+            const innerRadius = 18; 
+            const spikes = 4;
+            let rot = Math.PI / 2 * 3;
+            let step = Math.PI / spikes;
+
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY - outerRadius);
+            for (let i = 0; i < spikes; i++) {
+                ctx.lineTo(centerX + Math.cos(rot) * outerRadius, centerY + Math.sin(rot) * outerRadius);
+                rot += step;
+                ctx.lineTo(centerX + Math.cos(rot) * innerRadius, centerY + Math.sin(rot) * innerRadius);
+                rot += step;
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function downloadPNG() {
+            const link = document.createElement('a');
+            link.download = 'firegle_max_size.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        drawLogo();
+    </script>
 </body>
 </html>
