@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            /* 蓝紫渐变背景色 */
+            --bg-gradient: linear-gradient(135deg, #3037eb, #8247e5); 
+            /* 红色圆圈颜色 */
+            --circle-bg: #e62117; 
+            /* 十字星颜色 */
+            --star-color: #a0f9ff;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* 红色圆圈容器 */
+        .circle {
+            position: relative;
+            width: 150px; /* 您可以根据需要调整圆圈大小 */
+            height: 150px;
+            background-color: var(--circle-bg);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* 添加微弱投影增强立体感 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 中间的十字星 */
+        .star {
+            width: 30px; /* 调整星星大小 */
+            height: 30px;
+            background-color: var(--star-color);
+            /* 使用 clip-path 绘制四角星 */
+            clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+            /* 星星的发光效果 */
+            filter: drop-shadow(0 0 8px #42e8f1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="circle">
+        <div class="star"></div>
+    </div>
+
+</body>
+</html>
